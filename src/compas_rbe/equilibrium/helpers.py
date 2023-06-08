@@ -41,18 +41,18 @@ def make_Aeq(assembly, return_vcount=True):
 
     vcount = 0
 
-    node_index = {node: index for index, node in enumerate(assembly.nodes())}
+    node_index = {node: index for index, node in enumerate(assembly.graph.nodes())}
 
-    for edge in assembly.edges():
+    for edge in assembly.graph.edges():
         u, v = edge
 
         i = node_index[u]
         j = node_index[v]
 
-        U = assembly.node_attribute(u, 'block')
-        V = assembly.node_attribute(v, 'block')
+        U = assembly.graph.node_attribute(u, 'block')
+        V = assembly.graph.node_attribute(v, 'block')
 
-        interface = assembly.edge_attribute(edge, 'interface')
+        interface = assembly.graph.edge_attribute(edge, 'interfaces')[0]
 
         n = len(interface.points)
 

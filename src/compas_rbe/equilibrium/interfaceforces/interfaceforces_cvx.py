@@ -93,11 +93,11 @@ def compute_interface_forces_cvx(assembly,
     if not solver:
         solver = 'ECOS'
 
-    n = assembly.number_of_nodes()
+    n = assembly.graph.number_of_nodes()
 
-    node_index = {node: index for index, node in enumerate(assembly.nodes())}
+    node_index = {node: index for index, node in enumerate(assembly.graph.nodes())}
 
-    fixed = [node for node in assembly.nodes_where({'is_support': True})]
+    fixed = [node for node in assembly.graph.nodes_where({'is_support': True})]
     fixed = [node_index[node] for node in fixed]
     free = list(set(range(n)) - set(fixed))
 
@@ -112,8 +112,8 @@ def compute_interface_forces_cvx(assembly,
     # b = [[0, 0, -1 * assembly.blocks[node].volume() * density, 0, 0, 0] for node in assembly.nodes()]
 
     b = [[0, 0, 0, 0, 0, 0] for i in range(n)]
-    for node in assembly.nodes():
-        block = assembly.node_attribute(node, 'block')
+    for node in assembly.graph.nodes():
+        block = assembly.graph.node_attribute(node, 'block')
         index = node_index[node]
         b[index][2] = -1 * block.volume() * density
 
@@ -257,8 +257,8 @@ def compute_interface_forces_cvx(assembly,
 
         offset = 0
 
-        for edge in assembly.edges():
-            interface = assembly.edge_attribute(edge, 'interface')
+        for edge in assembly.graph.edges():
+            interface = assembly.graph.edge_attribute(edge, 'interfaces')[0]
 
             n = len(interface.points)
 
